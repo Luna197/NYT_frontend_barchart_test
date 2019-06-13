@@ -1,5 +1,4 @@
 
-
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
 width = 900 - margin.left - margin.right,
 height = 400 - margin.top - margin.bottom;
@@ -16,10 +15,23 @@ var y = d3.scaleLinear()
           .range([height,0])
           .domain([0,0.5]);
 
-// Creat Svg Element
-function createSvg(sectionId, JSONPath, sectionTitle, orderOverAllPath, lineID){
+/**
+ * 
+ *          Function For Creat Bar Chart SVG
+ * 
+    *          Parameters:
+    *              divElementID : HTML div element ID
+    *              dimensionLevelJSONPath : JSON Path for the barchart data
+    *              barChartTitle : Title for the bar chart
+    *              orderOverAllJSONPath: JSON Path for the order_over_All data
+    *              lineID : line ID for the standerd order_over_all data
+ *                  
+ * 
+ */
 
-    var svgSection = d3.select(sectionId).append("svg")
+function createSvg(divElementID, dimensionLevelJSONPath, barChartTitle, orderOverAllJSONPath, lineID){
+
+    var svgSection = d3.select(divElementID).append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
@@ -27,7 +39,7 @@ function createSvg(sectionId, JSONPath, sectionTitle, orderOverAllPath, lineID){
     
     // renderJSON(path, svgSection, sectionTitle)
     
-    d3.json(JSONPath).then( data => {
+    d3.json(dimensionLevelJSONPath).then( data => {
 
         // Clean data
         data.forEach(d => {
@@ -115,18 +127,20 @@ function createSvg(sectionId, JSONPath, sectionTitle, orderOverAllPath, lineID){
         .attr("font-size", "17px")
 
         addLegend(svgSection);
-        addTitle(bar, sectionTitle)
+        addTitle(bar, barChartTitle)
 
     }).catch(error =>  {
         console.log(error)
     });
 
 // add order over all line
-    addOrderOverAll(orderOverAllPath, svgSection, lineID)
+    addOrderOverAll(orderOverAllJSONPath, svgSection, lineID)
     return svgSection;
 }
 
 
+
+// ???????????????????????? do we need to seperate the legend and title as seperate function or just inside the createsvg function ?????????????????????
 
 // Add Legend 
 function addLegend(svgObject) {
@@ -178,20 +192,31 @@ function addLegend(svgObject) {
 }
 
 // Add Title
-function addTitle(barChart, sectionTitle){
+function addTitle(barChart, barChartTitle){
 
    barChart.append("g")
             .attr("transform", "translate( 30, 20)")
             .attr("font-size", "30px")
             .append("text")
-            .text(sectionTitle)
+            .text(barChartTitle)
 }
 
 
-// function for order_overall base line
-function addOrderOverAll(JSONPath, svgSection, lineID)  {
+/**
+ * 
+ *          Function For Add Order_Over_All data line
+ * 
+    *          Parameters:
+    *              orderOverAllJSONPath : JSON path for order_over_all data
+    *              svgSection: Dimension level bar chart svg
+    *              lineID: JSON Path for the order_over_All data
+ *                  
+ * 
+ */
 
-    d3.json(JSONPath).then(data => {
+function addOrderOverAll(orderOverAllJSONPath, svgSection, lineID)  {
+
+    d3.json(orderOverAllJSONPath).then(data => {
 
         data.Dimension_CTR = +data.Dimension_CTR;
         data.Industry_CTR = +data.Industry_CTR;
@@ -214,26 +239,35 @@ function addOrderOverAll(JSONPath, svgSection, lineID)  {
                    .attr("font-size", "17px")
                    .attr("fill", "black")
     
-    
         d3.select("#" + lineID).lower() 
     
     }).catch(error => console.log(error))    
 
 }
 
-// function for create the function
-function createTable(tableID, dimensionLevelPath, orderOverAllPath){
+/**
+ * 
+ *          Function For Creat Table 
+ * 
+    *          Parameters:
+    *              divElementID : HTML div element ID
+    *              dimensionLevelPath: JSON Path for the dimension level data
+    *              orderOverAllPath: JSON Path for the order_over_All data
+ *                  
+ * 
+ */
+
+
+function createTable(divElementID, dimensionLevelPath, orderOverAllPath){
     
-    var tableAllSection = d3.select(tableAllSectionID).append("table")
+    var tableAllSection = d3.select(divElementID).append("table")
                 .attr("width", 1200)
                 .attr("height", height + margin.top + margin.bottom)
                 // .attr("width", width - margin.left)
                 // .attr("height", height)
                 // .style("margin","auto")
-                // .append("g")
-            
+                // .append("g")    
                 // .attr("transform", "translate(" + margin.left+ "," + margin.top + ")");
-
 
     Promise.all([
         d3.json(dimensionLevelPath),
