@@ -215,11 +215,15 @@ var svgPageType = createSvg(pageSectionId, pageSectionJSONPath, pageSectionTitle
 
 */
 var orderOverAllPath = "data/order_overall.json"
+var pageOrderOverAll = "data/page_type_order_overall.json"
+
 var topLineID = "overAllTop"
 var bottomLineID = "overAllBottom"
+var pageLineID = "pageOverAll"
 
 addOrderOverAll(orderOverAllPath, svgTopSection, topLineID)
 addOrderOverAll(orderOverAllPath, svgBottomSection, bottomLineID)
+addOrderOverAll(pageOrderOverAll, svgPageType, pageLineID)
 
 function addOrderOverAll(JSONPath, svgSection, lineID)  {
 
@@ -253,37 +257,6 @@ function addOrderOverAll(JSONPath, svgSection, lineID)  {
     }).catch(error => console.log(error))    
 
 }
-
-
-d3.json("data/page_type_order_overall.json").then(data => {
-
-    data.Dimension_CTR = +data.Dimension_CTR;
-    data.Industry_CTR = +data.Industry_CTR;
-
-    var overAllTop = svgPageType.append("g")
-                                .attr("id", "overAllTopPage")
-                                
-
-        overAllTop.append("line")
-                .attr("stroke", "black")
-                .attr("stroke-width", 2)
-                .attr("x1", -70)
-                .attr("y1", y((data.Dimension_CTR) * 100))
-                .attr("x2", width)
-                .attr("y2", y((data.Dimension_CTR) * 100))
-                
-
-        overAllTop.append("text")
-               .attr("x", -70)
-               .attr("y", y((data.Dimension_CTR) * 100) - 10)
-               .text((data.Dimension_CTR * 100).toFixed(2) + "%")
-               .attr("font-size", "17px")
-
-    d3.select("#overAllTopPage").lower()
-
-}).catch(error => console.log(error))
-
-
 
 // 
 var tableAllSection = d3.select('#all_section_data').append("table")
