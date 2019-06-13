@@ -1,0 +1,10 @@
+[
+{"order_id":"2516713093","dimension":"section","dimension_details":"nyt home page","Dimension_CTR":"9.856128881293917E-4","Industry_CTR":"9.363464019927504E-4"},
+{"order_id":"2516713093","dimension":"section","dimension_details":"u.s.","Dimension_CTR":"0.0018273946573314046","Industry_CTR":"0.0017706949977866313"},
+{"order_id":"2516713093","dimension":"section","dimension_details":"opinion","Dimension_CTR":"0.0016117550669549918","Industry_CTR":"0.0017002686188269326"},
+{"order_id":"2516713093","dimension":"section","dimension_details":"crosswords","Dimension_CTR":"6.031825057924669E-4","Industry_CTR":"6.478572122704156E-4"},
+{"order_id":"2516713093","dimension":"section","dimension_details":"health","Dimension_CTR":"0.0013714101323007422","Industry_CTR":"0.0015186086220704454"},
+{"order_id":"2516713093","dimension":"section","dimension_details":"world","Dimension_CTR":"0.0016454865000579398","Industry_CTR":"0.0018126058783339"},
+{"order_id":"2516713093","dimension":"section","dimension_details":"na","Dimension_CTR":"0.004982551184838808","Industry_CTR":"0.003989251666906196"},
+{"order_id":"2516713093","dimension":"section","dimension_details":"food & cooking","Dimension_CTR":"6.799818671502094E-4","Industry_CTR":"9.125831653070411E-4"}
+]

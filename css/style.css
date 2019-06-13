@@ -1,0 +1,42 @@
+
+/* 
+body {
+	font: 10px sans-serif;
+  } */
+
+/* .axis path,
+.axis line {
+fill: none;
+stroke: #000;
+shape-rendering: crispEdges;
+} */
+
+.x.axis path {
+display: none;
+}
+/* 
+.bar1 {
+fill: steelblue;
+}
+.bar2 {
+fill: orange;
+}
+ */
+
+table {
+  /* border: 10px; */
+  border-collapse: collapse;
+  padding: 40px;
+  border-spacing: 10px;
+}
+th {
+  border-bottom: 2px solid #ddd;
+  padding: 20px;
+  font-weight: bold;
+  font-size: 16px;
+}
+td {
+  padding: 20px;
+  border-top: 1px solid #ddd;
+  font-size: 15px;
+}

@@ -1,0 +1,8 @@
+[
+
+{"order_id":"2530366443","dimension":"cat_type","dimension_details":"Homepage","Dimension_CTR":"9.711616873007636E-4","Industry_CTR":"0.0012529156032616998"},
+{"order_id":"2530366443","dimension":"cat_type","dimension_details":"Interactive","Dimension_CTR":"7.376305038583749E-4","Industry_CTR":"7.61731551629456E-4"},
+{"order_id":"2530366443","dimension":"cat_type","dimension_details":"Section Front","Dimension_CTR":"7.15612643935725E-4","Industry_CTR":"0.0011226947420462914"},
+{"order_id":"2530366443","dimension":"cat_type","dimension_details":"Article","Dimension_CTR":"0.001298112731672138","Industry_CTR":"0.0019882743598917826"},
+{"order_id":"2530366443","dimension":"cat_type","dimension_details":"Other","Dimension_CTR":"0.001025819995029532","Industry_CTR":"0.0018491450909329209"}
+]
