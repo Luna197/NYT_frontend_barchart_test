@@ -16,11 +16,8 @@ var y = d3.scaleLinear()
           .range([height,0])
           .domain([0,0.5]);
 
-
-
-
 // Creat Svg Element
-function createSvg(sectionId, JSONPath, sectionTitle){
+function createSvg(sectionId, JSONPath, sectionTitle, orderOverAllPath, lineID){
 
     var svgSection = d3.select(sectionId).append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -124,14 +121,14 @@ function createSvg(sectionId, JSONPath, sectionTitle){
         console.log(error)
     });
 
-    console.log(svgSection + "infunction")
+// add order over all line
+    addOrderOverAll(orderOverAllPath, svgSection, lineID)
     return svgSection;
 }
 
 
 
-// Add Legend Part
-
+// Add Legend 
 function addLegend(svgObject) {
 
     // //Legend
@@ -191,42 +188,8 @@ function addTitle(barChart, sectionTitle){
 }
 
 
-var topSectionId = "#top_section"
-var bottomSectionId = "#bottom_section"
-var pageSectionId = '#page_type_data'
-
-var topSectionJSONPath = "data/top_sections.json"
-var bottomSectionJSONPath = "data/bottom_sections.json"
-var pageSectionJSONPath = "data/page_type.json"
-
-var topSectionTitle = "Top Section"
-var bottomSectionTitle = "Bottom Section"
-var pageSectionTitle = "Page Type Data"
-
-var svgTopSection = createSvg(topSectionId, topSectionJSONPath, topSectionTitle)
-var svgBottomSection = createSvg(bottomSectionId, bottomSectionJSONPath, bottomSectionTitle)
-var svgPageType = createSvg(pageSectionId, pageSectionJSONPath, pageSectionTitle)
-
-
-
-/*
-
----------------------------Order Overall Line Attach to Top Section and Bottom Section---------------------------------------
-
-*/
-var orderOverAllPath = "data/order_overall.json"
-var pageOrderOverAll = "data/page_type_order_overall.json"
-
-var topLineID = "overAllTop"
-var bottomLineID = "overAllBottom"
-var pageLineID = "pageOverAll"
-
-addOrderOverAll(orderOverAllPath, svgTopSection, topLineID)
-addOrderOverAll(orderOverAllPath, svgBottomSection, bottomLineID)
-addOrderOverAll(pageOrderOverAll, svgPageType, pageLineID)
-
+// function for order_overall base line
 function addOrderOverAll(JSONPath, svgSection, lineID)  {
-
 
     d3.json(JSONPath).then(data => {
 
@@ -258,84 +221,115 @@ function addOrderOverAll(JSONPath, svgSection, lineID)  {
 
 }
 
-// 
-var tableAllSection = d3.select('#all_section_data').append("table")
-            .attr("width", 1200)
-            .attr("height", height + margin.top + margin.bottom)
-            // .attr("width", width - margin.left)
-            // .attr("height", height)
-            // .style("margin","auto")
-            // .append("g")
-           
-            // .attr("transform", "translate(" + margin.left+ "," + margin.top + ")");
-
-
-Promise.all([
-    d3.json("data/all_sections.json"),
-    d3.json("data/order_overall.json")
-]).then(files =>{
-
-    // console.log(files[0])
-    // for orderOverallCTR is the dimension level? or Industry Level?
-    files[1].Dimension_CTR = +files[1].Dimension_CTR
-
-    var orderOverAll = files[1].Dimension_CTR * 100
+// function for create the function
+function createTable(tableID, dimensionLevelPath, orderOverAllPath){
     
-    var res = []
-    files[0].forEach(d => {
-        d.Dimension_CTR = (+d.Dimension_CTR * 100).toFixed(2);
-        d.Industry_CTR = (+d.Industry_CTR * 100).toFixed(2);
-        var versOrderOverAll = ((d.Dimension_CTR - orderOverAll) / orderOverAll).toFixed(2)
-        var versIndustryCTR = ((d.Dimension_CTR - d.Industry_CTR) / d.Industry_CTR).toFixed(2)
-        res.push([d.dimension_details, d.Dimension_CTR + "%", orderOverAll.toFixed(2) + "%", versOrderOverAll + "%", d.Industry_CTR + "%", versIndustryCTR + "%"])
+    var tableAllSection = d3.select(tableAllSectionID).append("table")
+                .attr("width", 1200)
+                .attr("height", height + margin.top + margin.bottom)
+                // .attr("width", width - margin.left)
+                // .attr("height", height)
+                // .style("margin","auto")
+                // .append("g")
+            
+                // .attr("transform", "translate(" + margin.left+ "," + margin.top + ")");
+
+
+    Promise.all([
+        d3.json(dimensionLevelPath),
+        d3.json(orderOverAllPath)
+    ]).then(files =>{
+        
+            // console.log(files[0])
+            // for orderOverallCTR is the dimension level? or Industry Level?
+            files[1].Dimension_CTR = +files[1].Dimension_CTR
+        
+            var orderOverAll = files[1].Dimension_CTR * 100
+            
+            var res = []
+            files[0].forEach(d => {
+                d.Dimension_CTR = (+d.Dimension_CTR * 100).toFixed(2);
+                d.Industry_CTR = (+d.Industry_CTR * 100).toFixed(2);
+                var versOrderOverAll = ((d.Dimension_CTR - orderOverAll) / orderOverAll).toFixed(2)
+                var versIndustryCTR = ((d.Dimension_CTR - d.Industry_CTR) / d.Industry_CTR).toFixed(2)
+                res.push([d.dimension_details, d.Dimension_CTR + "%", orderOverAll.toFixed(2) + "%", versOrderOverAll + "%", d.Industry_CTR + "%", versIndustryCTR + "%"])
+            })
+        
+            // Table 
+            var table = tableAllSection.append("g")     
+        
+            // Table Header                     
+            var theader = table.append("thead").append("tr")
+            theader.selectAll("th")
+                    .data(["Section", "Section Order CTR", "Order Overall CTR", "% Versus Order Overall CTR", "Industry CTR", "% Versus Industry CTR"])
+                    .enter()
+                    .append("th")
+                    .text(d => d)
+                    .attr("font-size", "20px")
+            
+            // Table Body
+            var tbody = table.append("tbody");
+        
+            // Rows and Cells in Table Body
+            rows = tbody.selectAll("tr")
+                        .data(res)
+                        .enter()
+                        .append("tr");
+        
+            cells = rows.selectAll("td")
+                        .data(d => d)
+                        .enter()
+                        .append("td")
+                        .text(d => d)
+                        .style("font-size", "18px")
+                        .style("color", (d,i) => {
+                            if (i == 3 || i == 5){
+                            return d[0] == "-" ? "red" : "green"; 
+                            }
+                        })
+                        .each((d, i, nodes) => {
+                            if (i == 3 || i == 5){
+                                
+                                var svg = d3.select(nodes[i]).append("svg").attr("width", 10).attr("height", 10)
+                                // .append('h1').text(i)
+                                svg.append("path")
+                                    .attr("d", d => d[0] == "-" ? "M 0 0 L 10 0 L 5 10 L 0 0" : "M 0 10 L 10 10 L 5 0 L 0 10")
+                                    .attr("stroke", d => d[0] == "-" ? "red" : "green")
+                                    .attr("fill", d => d[0] == "-" ? "red" : "green")
+                            }
+                        })
     })
 
+    return tableAllSection
+}
 
-    // Table 
 
-    var table = tableAllSection.append("g")     
+var topSectionID = "#top_section"
+var bottomSectionID = "#bottom_section"
+var pageSectionID = '#page_type_data'
+var tableAllSectionID = "#all_section_data"
 
-    // Table Header                     
-    var theader = table.append("thead").append("tr")
-    theader.selectAll("th")
-            .data(["Section", "Section Order CTR", "Order Overall CTR", "% Versus Order Overall CTR", "Industry CTR", "% Versus Industry CTR"])
-            .enter()
-            .append("th")
-            .text(d => d)
-            .attr("font-size", "20px")
+var topSectionJSONPath = "data/top_sections.json"
+var bottomSectionJSONPath = "data/bottom_sections.json"
+var pageSectionJSONPath = "data/page_type.json"
+var allSectionJSONPath = "data/all_sections.json"
 
-    
-    // Table Body
-    var tbody = table.append("tbody");
 
-    // Rows and Cells in Table Body
-    rows = tbody.selectAll("tr")
-                .data(res)
-                .enter()
-                .append("tr");
+var topSectionTitle = "Top Section"
+var bottomSectionTitle = "Bottom Section"
+var pageSectionTitle = "Page Type Data"
 
-    cells = rows.selectAll("td")
-                .data(d => d)
-                .enter()
-                .append("td")
-                .text(d => d)
-                .style("font-size", "18px")
-                .style("color", (d,i) => {
-                    if (i == 3 || i == 5){
-                    return d[0] == "-" ? "red" : "green"; 
-                    }
-                })
-                .each((d, i, nodes) => {
-                    if (i == 3 || i == 5){
-                        
-                        var svg = d3.select(nodes[i]).append("svg").attr("width", 10).attr("height", 10)
-                        // .append('h1').text(i)
-                        svg.append("path")
-                            .attr("d", d => d[0] == "-" ? "M 0 0 L 10 0 L 5 10 L 0 0" : "M 0 10 L 10 10 L 5 0 L 0 10")
-                            .attr("stroke", d => d[0] == "-" ? "red" : "green")
-                            .attr("fill", d => d[0] == "-" ? "red" : "green")
-                    }
-                })
+var orderOverAllPath = "data/order_overall.json"
+var pageOrderOverAll = "data/page_type_order_overall.json"
 
-    
-})
+var topLineID = "overAllTop"
+var bottomLineID = "overAllBottom"
+var pageLineID = "pageOverAll"
+
+var svgTopSection = createSvg(topSectionID, topSectionJSONPath, topSectionTitle, orderOverAllPath, topLineID)
+var svgBottomSection = createSvg(bottomSectionID, bottomSectionJSONPath, bottomSectionTitle, orderOverAllPath, bottomLineID)
+var svgPageType = createSvg(pageSectionID, pageSectionJSONPath, pageSectionTitle, pageOrderOverAll, pageLineID)
+var tableAllSection = createTable(tableAllSectionID, allSectionJSONPath, orderOverAllPath)
+
+
+
