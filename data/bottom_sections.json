@@ -1,5 +1,5 @@
 [
-{"order_id":"2488443759","dimension":"section","dimension_details":"fashion & style","Dimension_CTR":"0.002128162686214235","Industry_CTR":"0.0013158792478987734"},
-{"order_id":"2488443759","dimension":"section","dimension_details":"u.s.","Dimension_CTR":"0.0029301695994904055","Industry_CTR":"0.00159433007991747"},
-{"order_id":"2488443759","dimension":"section","dimension_details":"world","Dimension_CTR":"0.00355989734249524","Industry_CTR":"0.00159295566873064"}
+{"order_id":"2521420541","dimension":"section","dimension_details":"new york","Dimension_CTR":"0.002249754143634004","Industry_CTR":null},
+{"order_id":"2521420541","dimension":"section","dimension_details":"u.s.","Dimension_CTR":"0.0029269540185971514","Industry_CTR":null},
+{"order_id":"2521420541","dimension":"section","dimension_details":"world","Dimension_CTR":"0.003045650537266443","Industry_CTR":null}
 ]

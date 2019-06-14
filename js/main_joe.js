@@ -30,17 +30,36 @@ var y = d3.scaleLinear()
  */
 
 async function createSvg(divElementID, dimensionLevelJSONPath, barChartTitle, orderOverAllJSONPath, lineID) {
+    var chartMargin = { top: 20, right: 20, bottom: 30, left: 40 },
+        chartWidth = 900 - chartMargin.left - chartMargin.right,
+        chartHeight = 400 - chartMargin.top - chartMargin.bottom;
+
+    // Scale 
+
+    // X scale
+    var chartX = d3.scaleBand()
+        .range([0, chartWidth])
+        .padding(0.1);
+
+    // Y Scale
+    var chartY = d3.scaleLinear()
+        .range([chartHeight, 0])
+        .domain([0, 1]);
 
     // renderJSON(path, svgSection, sectionTitle)
 
-    var data =  await d3.json(dimensionLevelJSONPath);
-    width = data.length * 300;
+    var data = await d3.json(dimensionLevelJSONPath);
+
+    var barWidth = 50
+    var barGap = 5
+
+    chartWidth = data.length * (barWidth * 2 + barGap);
 
     var svgSection = d3.select(divElementID).append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", chartWidth + chartMargin.left + chartMargin.right)
+        .attr("height", chartHeight + chartMargin.top + chartMargin.bottom)
         .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + chartMargin.left + "," + chartMargin.top + ")");
 
     // Clean data
     data.forEach(d => {
@@ -66,26 +85,23 @@ async function createSvg(divElementID, dimensionLevelJSONPath, barChartTitle, or
     });
 
     // set x Domain
-    x.domain(data.map(d => d.dimension_details));
+    chartX.domain(data.map(d => d.dimension_details));
 
     // set X and Y Axis 
-    var xAxis = d3.axisBottom(x).tickSize(0)
-    var yAxis = d3.axisLeft(y)
-
-    var barWidth = 50
-    var barGap = 5
+    var xAxis = d3.axisBottom(chartX).tickSize(0)
+    var yAxis = d3.axisLeft(chartY)
 
     var bar = svgSection.append("g")
         .attr("transform", "translate(50,10)")
 
-    // x-axis
+    // x-axis labels
     bar.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + chartHeight + ")")
         .call(xAxis)
         // .attr("display", "none")
         .attr("font-size", "17px")
-        .style("text-anchor", "end");
+        .style("text-anchor", "middle");
 
 
     // y-axis labels
@@ -109,16 +125,16 @@ async function createSvg(divElementID, dimensionLevelJSONPath, barChartTitle, or
     // rect for dimension_ctr
     groupBarChart.append("rect")
         .attr("fill", "steelblue")
-        .attr("y", d => y((d.Dimension_CTR) * 100))
-        .attr("x", d => x(d.dimension_details))
-        .attr("height", d => (height - y((d.Dimension_CTR) * 100)))
+        .attr("y", d => chartY((d.Dimension_CTR) * 100))
+        .attr("x", d => chartX(d.dimension_details))
+        .attr("height", d => (chartHeight - chartY((d.Dimension_CTR) * 100)))
         .attr("width", barWidth)
         .attr("transform", "translate(30,0)")
 
     // text label for first bar
     groupBarChart.append("text")
-        .attr("y", d => y((d.Dimension_CTR) * 100) - 10)
-        .attr("x", d => x(d.dimension_details) + 70)
+        .attr("y", d => chartY((d.Dimension_CTR) * 100) - 10)
+        .attr("x", d => chartX(d.dimension_details) + 70)
         .attr("text-anchor", "middle")
         // .attr("y", d => (height - y((d.clicks/d.impressions) * 100 )) + 5)
         .text(d => ((d.Dimension_CTR) * 100).toFixed(2) + "%")
@@ -128,16 +144,16 @@ async function createSvg(divElementID, dimensionLevelJSONPath, barChartTitle, or
     // rect for dimension_ctr
     groupBarChart.append("rect")
         .attr("fill", "orange")
-        .attr("y", d => y((d.Industry_CTR) * 100))
-        .attr("x", d => x(d.dimension_details) + barWidth + barGap)
-        .attr("height", d => (height - y((d.Industry_CTR) * 100)))
+        .attr("y", d => chartY((d.Industry_CTR) * 100))
+        .attr("x", d => chartX(d.dimension_details) + barWidth + barGap)
+        .attr("height", d => (chartHeight - chartY((d.Industry_CTR) * 100)))
         .attr("width", barWidth)
         .attr("transform", "translate(30,0)")
 
     // text label for first bar
     groupBarChart.append("text")
-        .attr("y", d => y((d.Industry_CTR) * 100) - 10)
-        .attr("x", d => x(d.dimension_details) + x.bandwidth() / 2 + 40)
+        .attr("y", d => chartY((d.Industry_CTR) * 100) - 10)
+        .attr("x", d => chartX(d.dimension_details) + chartX.bandwidth() / 2 + 40)
         .attr("text-anchor", "middle")
         // .attr("y", d => (height - y((d.clicks/d.impressions) * 100 )) + 5)
         .text(d => {

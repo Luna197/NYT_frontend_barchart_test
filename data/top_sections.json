@@ -1,5 +1,5 @@
 [
-{"order_id":"2488443759","dimension":"section","dimension_details":"na","Dimension_CTR":"0.004001520130552389","Industry_CTR":"0.0021891285135258684"},
-{"order_id":"2488443759","dimension":"section","dimension_details":"opinion","Dimension_CTR":"0.003926101600334814","Industry_CTR":"0.00201458235990829"},
-{"order_id":"2488443759","dimension":"section","dimension_details":"business","Dimension_CTR":"0.0037363971790201297","Industry_CTR":"0.0019202094773975342"}
+{"order_id":"2521420541","dimension":"section","dimension_details":"arts","Dimension_CTR":"0.003941151126900829","Industry_CTR":null},
+{"order_id":"2521420541","dimension":"section","dimension_details":"business","Dimension_CTR":"0.003539590230959692","Industry_CTR":null},
+{"order_id":"2521420541","dimension":"section","dimension_details":"opinion","Dimension_CTR":"0.0031683864000104094","Industry_CTR":null}
 ]
